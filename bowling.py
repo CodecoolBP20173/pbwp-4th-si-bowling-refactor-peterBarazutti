@@ -1,10 +1,12 @@
 def score(game):
     result = 0
+    num_of_pins = 10
     frame = 1
+    max_frame = 10
     last = 0
     in_first_half = True
     for i in range(len(game)):
-        result = newmethod749(game, i, frame, result, last)
+        result = calc_result(game, i, frame, result, last, max_frame, num_of_pins)
         last = get_value(game[i])
         if in_first_half:
             in_first_half = False
@@ -16,18 +18,19 @@ def score(game):
             frame += 1
     return result
 
-def newmethod749(game, i, frame, result, last):
+
+def calc_result(game, i, frame, result, last, max_frame, num_of_pins):
     if game[i] == '/':
-        result += 10 - last
+        result += num_of_pins - last
+        if frame < max_frame:
+            result += get_value(game[i + 1])
     else:
         result += get_value(game[i])
-    if frame < 10 and get_value(game[i]) == 10:
-        if game[i] == '/':
-            result += get_value(game[i + 1])
-        elif game[i].lower() == 'x':
+    if game[i].lower() == 'x':
+        if frame < max_frame:
             result += get_value(game[i + 1])
             if game[i + 2] == '/':
-                result += 10 - get_value(game[i + 1])
+                result += num_of_pins - get_value(game[i + 1])
             else:
                 result += get_value(game[i + 2])
     return result
@@ -36,9 +39,7 @@ def newmethod749(game, i, frame, result, last):
 def get_value(char):
     if char in [str(i) for i in range(1, 10)]:
         return int(char)
-    elif char.lower() == 'x':
-        return 10
-    elif char == '/':
+    elif char.lower() == 'x' or char == '/':
         return 10
     elif char == '-':
         return 0

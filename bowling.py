@@ -3,11 +3,11 @@ def score(game):
     num_of_pins = 10
     frame = 1
     max_frame = 10
-    last = 0
+    previous_round_score = 0
     in_first_half = True
     for i in range(len(game)):
-        result = calc_result(game, i, frame, result, last, max_frame, num_of_pins)
-        last = get_value(game[i])
+        result = calc_result(game, i, frame, result, previous_round_score, max_frame, num_of_pins)
+        previous_round_score = get_value(game[i])
         if in_first_half:
             in_first_half = False
         else:
@@ -19,9 +19,9 @@ def score(game):
     return result
 
 
-def calc_result(game, i, frame, result, last, max_frame, num_of_pins):
+def calc_result(game, i, frame, result, previous_round_score, max_frame, num_of_pins):
     if game[i] == '/':
-        result += num_of_pins - last
+        result += num_of_pins - previous_round_score
         if frame < max_frame:
             result += get_value(game[i + 1])
     else:
